@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Avatar,
   Button,
@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 
 import SendIcon from '@material-ui/icons/Send';
+import io from 'socket.io-client';
 import avatar1 from './assets/avatar1.jpg';
 import Message from './Message';
 
@@ -24,10 +25,20 @@ const useStyles = makeStyles(() => ({
 
 }));
 
+const socket = io('http://localhost:8080', { transports: ['websocket'] });
+socket.on('connect', () => console.log('[IO] Connect =>New connection'));
+
 const Chat = (props) => {
   const classes = useStyles();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const handleNewMessage = (newMessage) => setMessages([...messages, newMessage]);
+
+    socket.on('chat.message', handleNewMessage);
+    return () => socket.off('chat.message', handleNewMessage);
+  }, [messages]);
 
   const handleInputChange = (event) => {
     setMessage(event.target.value);
@@ -36,11 +47,11 @@ const Chat = (props) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     if (message.trim()) {
-      setMessage('');
-      setMessages([...messages, {
+      socket.emit('chat.message', {
         id: 1,
         message,
-      }]);
+      });
+      setMessage('');
     }
   };
 
