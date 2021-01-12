@@ -8,20 +8,22 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#b2dfdb',
     flex: 1,
     alignContent: 'right',
-
+  },
+  personalItem: {
+    paddingRight: 10,
   },
 }));
 
-const Message = (props) => {
+const UserMessage = (props) => {
   const classes = useStyles();
   return (
     <ListItem className={classes.guest}>
+      <ListItemText align="right" primary={props.message} />
       <ListItemIcon>
         <Avatar alt="user1" src={props.avatar} />
       </ListItemIcon>
-      <ListItemText primary={props.message} />
     </ListItem>
   );
 };
 
-export default Message;
+export default UserMessage;
