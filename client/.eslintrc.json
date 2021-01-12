@@ -1,0 +1,32 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "react/jsx-filename-extension": [
+            "error",
+            {
+              "extensions": [".js", ".jsx"]
+            }
+          ],
+        "no-unused-vars": "warn",
+        "react/prop-types": "warn",
+        "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off"
+    }
+}
