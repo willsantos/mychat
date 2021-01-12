@@ -7,8 +7,11 @@ import {
 
 import SendIcon from '@material-ui/icons/Send';
 import io from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 import avatar1 from './assets/avatar1.jpg';
-import Message from './Message';
+import avatar2 from './assets/avatar2.jpg';
+import UserMessage from './UserMessage';
+import GuestMessage from './GuestMessage';
 
 const useStyles = makeStyles(() => ({
   largeIcon: {
@@ -24,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
 
 }));
-
+const myId = uuidv4();
 const socket = io('http://localhost:8080', { transports: ['websocket'] });
 socket.on('connect', () => console.log('[IO] Connect =>New connection'));
 
@@ -48,7 +51,7 @@ const Chat = (props) => {
     event.preventDefault();
     if (message.trim()) {
       socket.emit('chat.message', {
-        id: 1,
+        id: myId,
         message,
       });
       setMessage('');
@@ -59,22 +62,26 @@ const Chat = (props) => {
     <Container maxWidth="xl">
       <List className={classes.messageBox}>
         <ListItem>
-          <ListItemText align="right" className={classes.personalItem}>Oi, quer tc?</ListItemText>
-          <ListItemIcon>
-            <Avatar alt="user1" src={avatar1} />
-          </ListItemIcon>
+          <ListItemText align="center">
+            Bem vindo ao chat, bom papo!
+          </ListItemText>
         </ListItem>
         {messages.map((m) => (
-          <Message
-            avatar={avatar1}
-            message={m.message}
-          />
+          m.id === myId
+            ? (
+              <UserMessage
+                avatar={avatar1}
+                message={m.message}
+              />
+            )
+            : (
+              <GuestMessage
+                avatar={avatar2}
+                message={m.message}
+              />
+            )
         ))}
 
-        <Message
-          avatar={avatar1}
-          message="Quantos anos?"
-        />
       </List>
       <form onSubmit={handleFormSubmit}>
         <Grid container>
